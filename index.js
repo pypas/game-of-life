@@ -1,5 +1,13 @@
-const THRESHOLD = 0.3
-const MAX_ITER = 100
+const fs = require('fs')
+const { createCanvas } = require('canvas')
+var Gm = require("gm");
+
+const THRESHOLD = 0.25
+const MAX_ITER = 50
+const WIDTH = 100
+const HEIGHT = 100
+const GIF_INTERVAL = 20
+const OUTPUT_PATH = "game_of_life.gif"
 
 function dead_state(width, height) {
     var board = [...new Array(height)].map(() => [...new Array(width)].map(() => 0))
@@ -29,6 +37,7 @@ function render(board) {
     var board_string = divider + "\n" + board.map((line) => pretty_lines(line)).join("\n")
     board_string += "\n" + divider
     console.log(board_string)
+    return board_string
 }
 
 function next_cell_state(board, i, j) {
@@ -63,16 +72,51 @@ function next_board_state(board) {
     return new_board
 }
 
+var count = 0
+
+function draw_to_image(string_board) {
+    const canvas = createCanvas(WIDTH*10, HEIGHT*12)
+    const context = canvas.getContext('2d')
+    
+    context.fillStyle = '#000'
+    context.fillRect(0, 0, WIDTH*10, HEIGHT*12)
+    
+    context.font = 'bold 10pt DejaVuSansMono'
+    context.fillStyle = '#fff'
+    context.textAlign = "center"
+    context.fillText(string_board, WIDTH*5, 0)
+
+    const buffer = canvas.toBuffer('image/png')
+    fs.writeFileSync(`img/image${count}.png`, buffer)
+    count += 1
+}
+
 async function run_game_of_life(width, height) {
     board = random_state(width,height)
-    render(board)
+    draw_to_image(render(board))
     for(var i = 0; i < MAX_ITER; i++) {
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, GIF_INTERVAL));
         board = next_board_state(board)
-        render(board)
+        draw_to_image(render(board))
     }
 } 
 
-run_game_of_life(10, 10)
+run_game_of_life(WIDTH, HEIGHT).then( () => {
+    var gm = Gm()
+    for(var i = 0; i <= MAX_ITER; i++) {
+        gm.in(`img/image${i}.png`)   
+    }
+    
+    gm.delay(GIF_INTERVAL)
+    .write(OUTPUT_PATH, function(err){
+      if (err) throw err;
+      console.log("game_of_life.gif created");
+      for(var i = 0; i <= MAX_ITER; i++) {
+          fs.unlinkSync(`img/image${i}.png`)
+      }
+    });
+
+})
+
 
 module.exports = { next_board_state };
