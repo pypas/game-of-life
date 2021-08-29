@@ -8,17 +8,35 @@ npm install
 ```
 
 2. Update configs at the beginning of `index.js`.
-
-- `THRESHOLD`: the approximate desired proportion of living to dead cells in the initial board *(default = 0.25)*
 - `MAX_ITER`: maximum game iterations *(default = 50)*
-- `WIDTH`: board width *(default = 100)*
-- `HEIGHT`: board height *(default = 100)*
 - `GIF_INTERVAL`: interval of time between frames *(default = 20)*
 - `OUTPUT_PATH`: path to output GIF file 
+
+If you want to load your own board, set the following variable:
+- `BOARD_PATH`: path to desired board.
+
+Otherwise, leave it empty (`BOARD_PATH = ""`) in order to get a random board and set the following variables:
+- `WIDTH`: board width *(default = 100)*
+- `HEIGHT`: board height *(default = 100)*
+- `THRESHOLD`: the approximate desired proportion of living to dead cells in the initial board *(default = 0.25)*
 
 3. Run the script.
 ```js
 npm start
+```
+
+### Loading personalized boards from file
+The initial board state can be loaded from a file, which should be placed in the `boards` folder.
+
+An example of file content is shown bellow (`toad.txt`):
+
+```
+000000
+000000
+001110
+011100
+000000
+000000
 ```
 
 ## Testing
