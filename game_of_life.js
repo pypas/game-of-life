@@ -74,8 +74,8 @@ function draw_to_image(board, count) {
     let metrics = ctx.measureText(string_board);
     let fontHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxAscent;
     
-    canvas_width = metrics.width*1.2 //ctx.measureText(string_board).width //board.length*font_size + board.length
-    canvas_height =fontHeight*board[0].length*2//ctx.measureText(string_board).height //board[0].length*font_size + board[0].length*10
+    canvas_width = metrics.width*1.2
+    canvas_height =fontHeight*board[0].length*1.2
 
     const canvas = createCanvas(canvas_width, canvas_height)
     const context = canvas.getContext('2d')
